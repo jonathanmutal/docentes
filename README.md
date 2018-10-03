@@ -1,5 +1,6 @@
 # odoo-module
-Building a new module for odoo's framework.
+Building a new module for odoo's framework. <br>
+Odoo is an all-in-one management software that offers a range of business applications that form a complete suite of enterprise management applications targeting companies of all sizes. Odoo is an all-in-one business software including CRM, website/e-commerce, billing, accounting, manufacturing, warehouse - and project management, and inventory.
 
 ---------------------
 ## Locally installation
