@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="aportes_tree_view">
+        <field name="name">Aportes</field>
+        <field name="model">docentes.aportes</field>
+        <field name="arch" type="xml">
+            <tree string="Aportes">
+                <field name="docente"/>
+                <field name="legajo"/>
+                <field name="fecha"/>
+                <field name="nombre"/>
+                <field name="codigo"/>
+                <field name="aporte"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="aportes_form_view">
+        <field name="name">Aportes</field>
+        <field name="model">docentes.aportes</field>
+        <field name="arch" type="xml">
+            <form string="Cargo">
+                <sheet>
+                    <group>
+                        <field name="docente"/>
+                        <field name="legajo"/>
+                        <field name="fecha"/>
+                        <field name="nombre"/>
+                        <field name="codigo"/>
+                        <field name="aporte"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_aportes">
+        <field name="name">Aporte</field>
+        <field name="res_model">docentes.aportes</field>
+        <field name="domain">[]</field>
+        <field name="search_view_id" ref="aportes_form_view"/>
+    </record>
+    <menuitem name="Aportes" id="aportes" parent="base.menu_docentes_configuracion" sequence="30" 
+    action="action_aportes"/>
+</odoo>

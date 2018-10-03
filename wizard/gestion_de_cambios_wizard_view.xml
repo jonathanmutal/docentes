@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gestion_de_cambios_wizard" model="ir.ui.view">
+        <field name="name">Gestión de cambios</field>
+        <field name="model">docentes.gestion.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Elige una fecha">
+                <group>
+                    <group>
+                        <field name="titulo"/>
+                        <field name="fecha_desde"/>
+                        <field name="fecha_hasta"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="set_situacion" string="Obtener socios" type="object" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_gestion_de_cambios_wizard" model="ir.actions.act_window">
+        <field name="name">Gestión de cambios</field>
+        <field name="res_model">docentes.gestion.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_gestion_de_cambios_wizard"/>
+        <field name="target">new</field>
+    </record>
+    <menuitem name="Gestión de cambios" id="gestion_de_cambios_wizard" sequence="130" parent="base.menu_docentes_configuracion" action="action_gestion_de_cambios_wizard"/>
+</odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="gestion_de_cambios_tree_view">
+        <field name="name">gestion_de_cambios.tree</field>
+        <field name="model">docentes.gestion_de_cambios.modelo</field>
+        <field name="arch" type="xml">
+            <tree string="Gestión de cambios">
+                <field name="titulo"/>
+                <field name="fecha_desde"/>
+                <field name="fecha_hasta"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="gestion_de_cambios_form_view">
+        <field name="name">gestion_de_cambios.form</field>
+        <field name="model">docentes.gestion_de_cambios.modelo</field>
+        <field name="arch" type="xml">
+            <form string="Gestión de cambios">
+                <group>
+                    <field name="titulo"/>
+                    <field name="fecha_desde"/>
+                    <field name="fecha_hasta"/>
+                </group>
+                <group>
+                    <field name="docentes_cambio">
+                        <tree string="docentes">
+                            <field name="docente"/>
+                            <field name="situacion"/>
+                        </tree>
+                    </field>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_gestion_de_cambios">
+        <field name="name">Gestión de cambios</field>
+        <field name="res_model">docentes.gestion_de_cambios.modelo</field>
+        <field name="domain">[]</field>
+        <field name="search_view_id" ref="gestion_de_cambios_tree_view"/>
+    </record>
+    <menuitem name="Gestión de cambios" id="gestion_de_cambios" parent="base.menu_docentes" sequence="30" 
+    action="action_gestion_de_cambios"/>
+</odoo>
+
+<!--                 <page string="Docentes" attrs="{'invisible': [('esdocente','=',False)]}">
+                    <field name="docentesCambio" nolabel="1" colspan="4" readonly="1">
+                        <tree string="Gestión de cambios">
+                            <field name="docente"/>
+                            <field name="situacion"/>
+                        </tree>
+                        <form string="Gestión de cambios">
+                            <field name="docente"/>
+                            <field name="situacion"/>
+                        </form>
+                    </field>
+                </page> -->

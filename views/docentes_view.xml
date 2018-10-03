@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+      <!-- Vista de docentes  -->
+    <record id="view_res_partner_docentes_filter" model="ir.ui.view">
+        <field name="name">res.partner.select.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <search string="Docentes">
+                <field name="name" filter_domain="[('name','ilike',self)]" />
+                <field name="observacion" filter_domain="['|',('observacion','ilike',self),('legajo','=',self)]" string="Legajo"/>
+                <field name="afiliados_ant" filter_domain="[('afiliados_ant','ilike',self)]" string="Afiliado"/>
+                <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/> 
+                <filter icon="terp-personal" name="todos_no_afiliados" domain="[('estado', 'in', ['none','baja','pend_b','hist'])]" string="No afiliados" help="No afiliados"/>
+                <filter icon="terp-personal" name="todos_afiliados" domain="[('estado', 'in', ['activo','pend_a','jub_a'])]" string="Afiliados" help="Afiliados"/>
+                <filter string="Pendientes" name="pendientes" icon="terp-personal" domain="[('estado', 'in', ['pend_a','pend_b'])]" help="Pendientes"/>
+                <separator/>
+                <filter icon="terp-personal" name="activos" domain="[('estado', '=', 'activo')]" string="Activo" />
+                <filter icon="terp-personal" name="pasivos" domain="[('estado', '=', 'pasivo')]" string="Pasivo" />
+                <filter icon="terp-personal" name="bajas" domain="[('estado', '=', 'baja')]" string="Bajas" />
+                <filter icon="terp-personal" name="jubilados" domain="[('estado', '=', 'jub')]" string="Jubilados" />
+                <filter icon="terp-personal" name="historicos" domain="[('estado', '=', 'hist')]" string="Históricos" />
+                <filter icon="terp-personal" name="observados" domain="[('observado', '=', True)]" string="Observados" />
+                <group expand="1" string="Group By..." colspan="10" col="8">
+                    <filter string=" Estado" icon="terp-stock_effects-object-colorize" domain="[('estado', '!=', 'none')]" context="{'group_by':'estado'}"/>
+                    <filter string="Fecha de baja" help="Fecha de desafiliación" icon="terp-go-month" domain="[('estado', 'in', ['baja','pend_b'])]" context="{'group_by':'fecha_baja'}"/>
+                    <filter string="Fecha de alta" help="Fecha de afiliación" icon="terp-go-month" domain="[('estado', 'in', ['activo','pend_a'])]" context="{'group_by':'fecha_alta'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_docentes_tree">
+        <field name="name">Docentes</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <tree string="Docentes">
+                <field name="legajo"/>
+                <field name="afiliado"/>
+                <field name="afiliados_ant"/>
+                <field name="name"/>
+                <field name="estado"/>
+                <field name="fecha_alta"/>
+                <field name="fecha_baja"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_docentes">
+        <field name="name">Docentes</field>
+        <field name="res_model">res.partner</field>
+        <field name="search_view_id" ref="view_res_partner_docentes_filter"/>
+        <field name="domain">[('esdocente','=',True)]</field>
+    </record>
+   <record model="ir.actions.act_window.view" id="action_docentes_view_tree">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_docentes_tree"/>
+        <field name="act_window_id" ref="action_docentes"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_docentes_view_form">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="base.view_partner_form"/>
+        <field name="act_window_id" ref="action_docentes"/>
+    </record>
+    <menuitem name="Docentes" id="base.menu_docentes_main" sequence="1" parent="base.menu_docentes"/>
+    <menuitem name="Listados" parent="base.menu_docentes_main" id="menu_docentes" sequence="1" action="action_docentes"/>
+
+    <record model="ir.ui.view" id="view_partner_form">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="is_company" position="after">
+            <field name="esdocente" on_change="onchange_type(esdocente)" class="oe_inline"/>
+                <label for="esdocente" string="Es docente?"/>
+            </field>
+            <field name="email" position="after">
+                <field name="email2" widget="email"/>
+            </field>
+            <notebook position="inside">
+                <page string="Docente" attrs="{'invisible': [('esdocente','=',False)]}">
+                    <group>
+                        <p>
+                            <button name="funcionSolicitarAfiliacion" type="object" attrs="{'invisible': [('estado','!=', 'none'),('estado','!=', 'baja'),('estado','!=', 'hist')]}" string="Afiliar"/>
+                            <button name="funcionSolicitarDesafiliacion" type="object" attrs="{'invisible': [('estado','!=', 'activo'),('estado','!=', 'jub'),('estado','!=', 'juba'),('estado','!=', 'pasivo')]}" string="Desafiliar"/>
+                            <button name="funcionConfirmarAfiliacion" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado','!=', 'pend_a')]}" string="Confirmar afiliación"/>
+                            <button name="funcionConfirmarDesafiliacion" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado','!=', 'pend_b')]}" string="Confirmar desafiliación"/>
+                            <button name="funcionActivoaJubilado" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado','!=', 'activo'), ('estado','!=', 'pasivo')]}" string="Afiliado que obtuvo su jubilación"/>
+                            <button name="funcionJubiladoaCotizante" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado', '!=', 'jub')]}" string="Jubilado Cotizante"/> 
+                            <button name="funcionJubiladoaNoCotizante" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado', '!=', 'juba')]}" string="Jubilado No Cotizante"/> 
+                            <button name="funcionJubiladoaHistorico" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado','!=', 'jub'), ('estado','!=', 'juba'), ('estado','!=', 'activo'), ('estado','!=', 'pasivo')]}" string="Afiliado Histórico"/>
+                            <button name="funcionPasivoaCotizante" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado', '!=', 'pasivo')]}" string="Afiliado Cotizante"/>
+                            <button name="funcionAfiladoaNoCotizante" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado', '!=', 'activo')]}" string="Afiliado No Cotizante"/>
+                        </p>
+                    </group>
+
+                    <group>
+                        <group>
+                            <field name="legajo"/>
+                            <field name="tipodni"/>
+                            <field name="dni"/>
+                            <field name="estadocivil"/>
+                            <field name="sexo"/>
+                            <field name="pais"/>
+                            <field name="fecha_nacimiento"/>
+                            <field name="antiguedad"/>
+                        </group>
+                        <group attrs="{'invisible': [('estado','=', 'none')]}">
+                            <field name="estado"/>
+                            <field name="afiliado"/>
+                            <field name="fecha_alta"/>
+                            <field name="fecha_baja"/>
+                            <field name="afiliados_ant"/>
+                            <field name="observado"/>
+                            <field name="observacion" attrs="{'invisible': [('observado','=', False)]}"/>
+                       </group>
+                    </group>
+                </page>
+                <page string="Cargos" attrs="{'invisible': [('esdocente','=',False)]}">
+                    <field name="cargos" nolabel="1" colspan="4" readonly="1">
+                        <tree string="Cargos">
+                            <field name="tipo_cargo"/>
+                            <field name="horas"/>
+                            <field name="dependencia"/>
+                            <field name="caracter"/>
+                            <field name="tipo_licencia"/>
+                        </tree>
+                        <form string="Cargos">
+                            <field name="tipo_cargo"/>
+                            <field name="caracter"/>
+                            <field name="fecha_alta"/>
+                            <field name="fecha_baja"/>
+                            <field name="horas"/>
+                            <field name="dependencia"/>
+                            <field name="inicio_licencia"/>
+                            <field name="fin_licencia"/>
+                            <field name="tipo_licencia"/>
+                        </form>
+                    </field>
+                </page>
+<!--                 <page string="Aportes" attrs="{'invisible': [('estado','=', 'none')]}">
+                    <field name="aportes" nolabel="1" colspan="4" readonly="1">
+                        <tree string="Aportes">
+                            <field name="fecha"/>
+                            <field name="aporte"/> 
+                            <field name="codigo"/>
+                        </tree>
+
+                        <form string="Aportes">
+                            <field name="fecha"/>
+                            <field name="aporte"/>
+                            <field name="codigo"/>
+                        </form>
+                    </field> 
+                </page> -->
+            </notebook>
+        </field>
+    </record>
+</odoo>
