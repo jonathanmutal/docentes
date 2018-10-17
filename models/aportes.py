@@ -21,6 +21,7 @@
 
 
 from odoo import api, fields, models, _
+from odoo.addons.docentes.config.config import *
 
 import time
 
@@ -31,27 +32,45 @@ class DocentesAportes(models.Model):
     _order = 'fecha desc, nombre'
     _description = 'Modelo para los aportes'
 
-    docente = fields.Many2one('res.partner', 'Docente',
-                              compute='_get_docente',
-                              store=True,
-                              required=False,
-                              ondelete='cascade')
+    docente = fields.Many2one('res.partner',
+        string='Docente',
+        required=True,
+        ondelete='cascade')
     legajo = fields.Integer('Legajo', required=True)
     nombre = fields.Char('Nombre', size=30)
-    fecha = fields.Date('Fecha', default=fields.datetime.now())
+    fecha = fields.Date('Fecha', default=fields.Datetime.now(), required=True)
     codigo = fields.Integer('Codigo')
-    aporte = fields.Float('Aporte', digits=(16,2), required=True)
+    aporte = fields.Float('Aporte',
+        digits=(16,2),
+        required=True,
+        store=True)
 
+    @api.multi
     @api.depends('legajo', 'nombre')
-    def _get_docente(self):
-        for record in self:
-            docente = self.env['res.partner'].search([('legajo', '=', self.legajo)])
-            if not docente:
-                nuevo_docente = {
-                    'legajo': self.legajo,
-                    'name': self.nombre,
-                    'esdocente': True
-                }
-                docente = self.env['res.partner'].create(nuevo_docente)
-            docente.write({'estado': 'activo'})
-            record.docente = docente
+    def create(self, vals):
+        """
+        Override the create's method
+        """
+        legajo = vals['legajo']
+        nombre = vals['nombre']
+        docente = self.env['res.partner'].search([('legajo', '=', legajo)])
+        if not docente:
+            nuevo_docente = {
+                'legajo': legajo,
+                'name': nombre,
+                'esdocente': True,
+                'estado': NONE
+            }
+            docente = self.env['res.partner'].create(nuevo_docente)
+            self.env['docentes.gestion_de_cambios'].create({
+                'fecha_de_aporte': vals['fecha'] if 'fecha' in vals else fields.Datetime.now(),
+                'docente': docente.id,
+                'situacion': NOA
+                })
+
+        vals.update({
+            'docente': docente.id,
+            'aporte': vals['aporte'] / 100
+            })
+
+        return super(DocentesAportes, self).create(vals)
