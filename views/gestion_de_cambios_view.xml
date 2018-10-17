@@ -5,7 +5,6 @@
         <field name="model">docentes.gestion_de_cambios.modelo</field>
         <field name="arch" type="xml">
             <tree string="Gestión de cambios">
-                <field name="titulo"/>
                 <field name="fecha_desde"/>
                 <field name="fecha_hasta"/>
             </tree>
@@ -17,7 +16,6 @@
         <field name="arch" type="xml">
             <form string="Gestión de cambios">
                 <group>
-                    <field name="titulo"/>
                     <field name="fecha_desde"/>
                     <field name="fecha_hasta"/>
                 </group>
@@ -26,6 +24,7 @@
                         <tree string="docentes">
                             <field name="docente"/>
                             <field name="situacion"/>
+                            <field name="fecha_de_aporte"/>
                         </tree>
                     </field>
                 </group>
@@ -38,19 +37,7 @@
         <field name="domain">[]</field>
         <field name="search_view_id" ref="gestion_de_cambios_tree_view"/>
     </record>
-    <menuitem name="Gestión de cambios" id="gestion_de_cambios" parent="base.menu_docentes" sequence="30" 
+    <menuitem name="Gestión de cambios" id="gestion_de_cambios" parent="base.menu_docentes" sequence="30"/>
+    <menuitem name="Listado de gestión de cambios" id="gestion_de_cambios_listado" parent="gestion_de_cambios" sequence="1" 
     action="action_gestion_de_cambios"/>
 </odoo>
-
-<!--                 <page string="Docentes" attrs="{'invisible': [('esdocente','=',False)]}">
-                    <field name="docentesCambio" nolabel="1" colspan="4" readonly="1">
-                        <tree string="Gestión de cambios">
-                            <field name="docente"/>
-                            <field name="situacion"/>
-                        </tree>
-                        <form string="Gestión de cambios">
-                            <field name="docente"/>
-                            <field name="situacion"/>
-                        </form>
-                    </field>
-                </page> -->

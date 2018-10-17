@@ -1,16 +1,9 @@
 from odoo import api, fields, models, _
-
-
-SITUACION = [
-    ('ASD', 'Activo sin descuentos'),
-    ('PSD', 'Pendiente de alta sin descuentos'),
-    ('OT', 'Otra situación')
-]
-
+from odoo.addons.docentes.config.config import SITUACION
 
 class DocentesGestionDeCambio(models.Model):
     _name = 'docentes.gestion_de_cambios'
-    _order = 'situacion'
+    _order = 'fecha_de_aporte desc, docente, situacion'
 
     docente = fields.Many2one('res.partner', 'Docente',
                                  required=True,
@@ -20,21 +13,23 @@ class DocentesGestionDeCambio(models.Model):
                                  string='Lista de cambios',
                                  readonly=True,
                                  ondelete='cascade')
+    fecha_de_aporte = fields.Datetime('Fecha de aporte')
     situacion = fields.Selection(SITUACION, 'Situación actual', readonly=True)
 
 
 class GestionDeCambio(models.Model):
     _name ='docentes.gestion_de_cambios.modelo'
-    _order = 'titulo desc,fecha_desde desc'
+    _order = 'fecha_desde desc,fecha_hasta desc'
     _description = 'Tabla de gestión de cambios'
     _sql_constraints = [
-        ('titulo',
-        'unique(titulo)',
-        'Seleccionar otro nombre para gestión de cambio. Este ya existe!'
+        ('fechas',
+        'unique(fecha_desde, fecha_hasta)',
+        'Estas fechas ya existen!' \
+        'Si quiere realizar nuevamente una consulta para gestión de cambio,' \
+        'por favor borre la anterior.'
          )
     ]
 
-    titulo = fields.Char(string='Nombre de gestión de cambio')
     docentes_cambio = fields.One2many('docentes.gestion_de_cambios',
                              'gestion',
                              string='Lista de cambios',
