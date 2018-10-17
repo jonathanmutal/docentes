@@ -8,7 +8,6 @@
                 <field name="docente"/>
                 <field name="legajo"/>
                 <field name="fecha"/>
-                <field name="nombre"/>
                 <field name="codigo"/>
                 <field name="aporte"/>
             </tree>
@@ -22,9 +21,9 @@
                 <sheet>
                     <group>
                         <field name="docente"/>
+                        <field name="nombre"/>
                         <field name="legajo"/>
                         <field name="fecha"/>
-                        <field name="nombre"/>
                         <field name="codigo"/>
                         <field name="aporte"/>
                     </group>
@@ -39,5 +38,5 @@
         <field name="search_view_id" ref="aportes_form_view"/>
     </record>
     <menuitem name="Aportes" id="aportes" parent="base.menu_docentes_configuracion" sequence="30" 
-    action="action_aportes"/>
+    action="action_aportes" groups="base.grupo_aportes_administracion"/>
 </odoo>

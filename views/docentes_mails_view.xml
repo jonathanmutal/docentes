@@ -1,59 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<record id="view_res_partner_docentes_mails_filter" model="ir.ui.view">
-<field name="name">res.partner.select.inherit</field>
-<field name="model">res.partner</field>
-<field name="arch" type="xml">
-    <search string="Docentes">
-        <field name="name" filter_domain="[('name','ilike',self)]" />     
-        <field name="observacion" filter_domain="['|',('observacion','ilike',self),('legajo','=',self)]" string="Legajo"/>
-        <field name="afiliados_ant" filter_domain="[('afiliados_ant','ilike',self)]" string="Afiliado"/>
-        <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/> 
-        <filter icon="terp-personal" name="todos_no_afiliados" domain="[('estado', 'in', ['none','baja','pend_b','hist'])]" string="No afiliados" help="No afiliados"/>
-        <filter icon="terp-personal" name="todos_afiliados" domain="[('estado', 'in', ['activo','pend_a','jub'])]" string="Afiliados" help="Afiliados"/>
-<!--                     <separator/> -->
-        <filter string="Pendientes" name="pendientes" icon="terp-personal" domain="[('estado', 'in', ['pend_a','pend_b'])]" help="Pendientes"/>
-        <separator/>
-        <filter icon="terp-personal" name="activos" domain="[('estado', '=', 'activo')]" string="Activo" />
-        <filter icon="terp-personal" name="bajas" domain="[('estado', '=', 'baja')]" string="Bajas" />
-        <filter icon="terp-personal" name="jubilados" domain="[('estado', '=', 'jub')]" string="Jubilados" />
-                    <filter icon="terp-personal" name="historicos" domain="[('estado', '=', 'hist')]" string="Históricos" />
-                    <filter icon="terp-personal" name="observados" domain="[('observado', '=', True)]" string="Observados" />
-                    <group expand="1" string="Group By..." colspan="10" col="8">
-                        <filter string=" Estado" icon="terp-stock_effects-object-colorize" domain="[('estado', '!=', 'none')]" context="{'group_by':'estado'}"/>
-                        <filter string="Fecha de baja" help="Fecha de desafiliación" icon="terp-go-month" domain="[('estado', 'in', ['baja','pend_b'])]" context="{'group_by':'fecha_baja'}"/>
-                        <filter string="Fecha de alta" help="Fecha de afiliación" icon="terp-go-month" domain="[('estado', 'in', ['activo','pend_a'])]" context="{'group_by':'fecha_alta'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="view_docentes_mails_tree">
-            <field name="name">Docentes Mails</field>
-            <field name="model">res.partner</field>
-            <field name="arch" type="xml">
-                <tree string="Docentes">
-                    <field name="legajo"/>
-                    <field name="name"/>
-                    <field name="email"/>
-                    <field name="email2"/>
-                    <field name="estado"/>
-                    <field name="fecha_alta"/>
-                    <field name="fecha_baja"/>
-                </tree>
-            </field>
-        </record>
+   <record id="view_res_partner_docentes_mails_filter" model="ir.ui.view">
+        <field name="name">res.partner.select.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <search string="Docentes">
+                <field name="name" filter_domain="[('name','ilike',self)]" />
+                <field name="observacion" filter_domain="['|',('observacion','ilike',self),('legajo','=',self)]" string="Legajo"/>
+                <field name="afiliados_ant" filter_domain="[('afiliados_ant','ilike',self)]" string="Afiliado"/>
+                <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/>
+                <filter icon="terp-personal" name="todos_no_afiliados" domain="[('estado', 'in', ['none','baja','pend_b','hist'])]" string="No afiliados" help="No afiliados"/>
+                <filter icon="terp-personal" name="todos_afiliados" domain="[('estado', 'in', ['activo','pend_a','jub'])]" string="Afiliados" help="Afiliados"/>
+                <filter string="Pendientes" name="pendientes" icon="terp-personal" domain="[('estado', 'in', ['pend_a','pend_b'])]" help="Pendientes"/>
+                <separator/>
+                <filter icon="terp-personal" name="activos" domain="[('estado', '=', 'activo')]" string="Activo" />
+                <filter icon="terp-personal" name="bajas" domain="[('estado', '=', 'baja')]" string="Bajas" />
+                <filter icon="terp-personal" name="jubilados" domain="[('estado', '=', 'jub')]" string="Jubilados" />
+                <filter icon="terp-personal" name="historicos" domain="[('estado', '=', 'hist')]" string="Históricos" />
+                <filter icon="terp-personal" name="observados" domain="[('observado', '=', True)]" string="Observados" />
+                <group expand="1" string="Group By..." colspan="10" col="8">
+                    <filter string=" Estado" icon="terp-stock_effects-object-colorize" domain="[('estado', '!=', 'none')]" context="{'group_by':'estado'}"/>
+                    <filter string="Fecha de baja" help="Fecha de desafiliación" icon="terp-go-month" domain="[('estado', 'in', ['baja','pend_b'])]" context="{'group_by':'fecha_baja'}"/>
+                    <filter string="Fecha de alta" help="Fecha de afiliación" icon="terp-go-month" domain="[('estado', 'in', ['activo','pend_a'])]" context="{'group_by':'fecha_alta'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_docentes_mails_tree">
+        <field name="name">Docentes Mails</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <tree string="Docentes">
+                <field name="legajo"/>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="email2"/>
+                <field name="estado"/>
+                <field name="fecha_alta"/>
+                <field name="fecha_baja"/>
+            </tree>
+        </field>
+    </record>
     <record model="ir.actions.act_window" id="action_docentes_mails">
-            <field name="name">Docentes Mails</field>
-            <field name="res_model">res.partner</field>
-            <field name="search_view_id" ref="view_res_partner_docentes_mails_filter"/>
-            <field name="domain">[('esdocente','=',True)]</field>
-        </record>
-       <record model="ir.actions.act_window.view" id="action_docentes_mails_view_tree">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_docentes_mails_tree"/>
-            <field name="act_window_id" ref="action_docentes_mails"/>
-        </record>
-        <menuitem name="Mails" parent="base.menu_docentes_configuracion" id="menu_docentes_mails" sequence="5" action="action_docentes_mails"/>
+        <field name="name">Docentes Mails</field>
+        <field name="res_model">res.partner</field>
+        <field name="search_view_id" ref="view_res_partner_docentes_mails_filter"/>
+        <field name="domain">[('esdocente','=',True)]</field>
+    </record>
+   <record model="ir.actions.act_window.view" id="action_docentes_mails_view_tree">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_docentes_mails_tree"/>
+        <field name="act_window_id" ref="action_docentes_mails"/>
+    </record>
+    <menuitem name="Mails" parent="base.menu_docentes_configuracion" id="menu_docentes_mails" sequence="5" action="action_docentes_mails"/>
 </odoo>
 
