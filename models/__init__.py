@@ -21,6 +21,5 @@
 
 
 from . import docentes
-from . import cargos
 from . import aportes
 from . import gestion_de_cambios
