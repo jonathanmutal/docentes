@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<data noupdate="0">
-
-    <record id="base.group_docentes_administracion" model="res.groups">
-        <field name="name">Administración de docentes</field>
-        <field name="comment">Este usuario podrá administrar el estado de los docentes.</field>
-<!--        <field name="category_id" ref="base.module_category_docentes"/>  -->
-    </record>
-
-</data>
-
+    <data noupdate="0">
+        <record id="base.group_docentes_administracion" model="res.groups">
+            <field name="name">Administración de docentes</field>
+            <field name="comment">Este usuario podrá administrar el estado de los docentes.</field>
+        </record>
+        <record id="base.grupo_aportes_administracion" model="res.groups">
+            <field name="name">Administración de aportes</field>
+            <field name="comment">Este usuario podrá agregar nuevos aportes, lo que implicaría agregar nuevos docentes.</field>
+        </record>
+    </data>
 </odoo>
 
