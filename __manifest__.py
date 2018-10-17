@@ -36,12 +36,12 @@ Incorpora nueva información a la categoría Partner y menúes específicos para
     'depends': ['base'],
     'data': [
         'security/docentes_security.xml',
-        'views/docentes_cargos_tipo_view.xml',
-        'views/docentes_cargos_view.xml',
         'views/docentes_view.xml',
         'views/docentes_mails_view.xml',
         'views/aportes_view.xml',
         'views/gestion_de_cambios_view.xml',
+        'views/gestion_de_cambios_aportaron_view.xml',
+        'views/gestion_de_cambios_no_aportaron_view.xml',
 
         'wizard/gestion_de_cambios_wizard_view.xml'
     ],

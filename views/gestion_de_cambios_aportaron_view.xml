@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="gestion_de_cambios_aportaron_tree_view">
+        <field name="name">gestion_de_cambios_docentes_aportes.tree</field>
+        <field name="model">docentes.gestion_de_cambios</field>
+        <field name="arch" type="xml">
+            <tree string="Gestión de cambios aportes">
+                <field name="docente"/>
+                <field name="fecha_de_aporte"/>
+                <field name="situacion"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="gestion_de_cambios_aportaron_form_view">
+        <field name="name">gestion_de_cambios_aportes.form</field>
+        <field name="model">docentes.gestion_de_cambios</field>
+        <field name="arch" type="xml">
+            <form string="Gestión de cambios aportes">
+                <field name="docente"/>
+                <field name="fecha_de_aporte"/>
+                <field name="situacion"/>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_gestion_de_cambios_aportaron">
+        <field name="name">Gestión de cambios</field>
+        <field name="res_model">docentes.gestion_de_cambios</field>
+        <field name="domain">[('situacion', 'in', ['HA', 'PAA', 'NOA', 'JQA', 'PBA', 'BA', 'OS'])]</field>
+        <field name="search_view_id" ref="gestion_de_cambios_aportaron_tree_view"/>
+    </record>
+    <menuitem name="Aportaron" id="gestion_de_cambios_aportaron" parent="gestion_de_cambios" sequence="2" 
+    action="action_gestion_de_cambios_aportaron"/>
+</odoo>
