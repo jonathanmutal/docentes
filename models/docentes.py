@@ -19,47 +19,28 @@
 #
 ##############################################################################
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
-
-from . import cargos
-# from . import aportes
 import time
 
-
-STATE = [
-    ('none', 'No afiliado'),
-    ('hist', 'Histórico'),
-    ('baja', 'Desafiliado'),
-    ('pend_b', 'Pendiente de baja'),
-    ('pend_a', 'Pendiente de alta'),
-    ('pasivo', 'No cotizante'),
-    ('jub', 'Jubilado'),
-    ('juba', 'Jubilado Activo'),
-    ('activo', 'Activo')
-]
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
+from odoo.addons.docentes.config.config import *
 
 TIPODOC = [('dni','DNI'),('lc','LC'),('le','LE'),('pas','PAS'),('ci','CI')]
-ESTCIV = [('c', 'Casada/o'),('s','Soltera/o'), ('u', 'Unida/o'),('v', 'Viuda/o'),('d', 'Divorciada/o'),('p','Separada/o'),('n','No sabe/No contesta')]
-SEXO = [('f', 'Femenino'),('m','Masculino'), ('o', 'Otro'),('n','No sabe/No contesta')]
-
-
+ESTCIV = [('c', 'Casada/o'),('s','Soltera/o'), ('u', 'Unida/o'),('v', 'Viuda/o'),('d', 'Divorciada/o'),('p','Separada/o'),('n','Prefiere no decirlo')]
+SEXO = [('f', 'Femenino'),('m','Masculino'), ('o', 'Otro'),('n','Prefiere no decirlo')]
 
 
 class Partner(models.Model):
     '''Partner'''
     _inherit = 'res.partner'
     _sql_constraints = [
-        ('legajo',
-        'unique(legajo)',
-        'Este legajo ya existe! Por favor escriba nuevamente el legajo.'
-         )
+      ('legajo',
+      'unique(legajo)',
+      'Este legajo ya existe! Por favor escriba nuevamente el legajo.'
+       )
     ]
 
-
-    cargos = fields.One2many('docentes.cargos', 'partner_id', 'Cargos')
-    # aportes = fields.One2many('docentes.aportes', 'partner_id', 'Aportes')
-    email2 = fields.Char('Otro Email', size=240)
+    email2 = fields.Char('Otro Correo electrónico', size=240)
     esdocente = fields.Boolean('Es docente?', default=False)
     legajo = fields.Integer('Legajo')
     tipodni = fields.Selection(TIPODOC,'Tipo doc')
@@ -69,26 +50,31 @@ class Partner(models.Model):
     fecha_nacimiento = fields.Date('Fecha de nacimiento')
     pais = fields.Many2one('res.country','País de nacimiento')
     afiliado = fields.Integer('N afiliado')
-    afiliados_ant = fields.Char('N afiliado anteriores',size=240)
-    fecha_alta = fields.Date('Fecha de alta')
-    fecha_baja = fields.Date('Fecha de baja')
+    afiliados_ant = fields.Char('N afiliado anteriores',size=240,readonly=True)
+    fecha_alta = fields.Date('Fecha de alta',readonly=True)
+    fecha_baja = fields.Date('Fecha de baja',readonly=True)
     antiguedad = fields.Date('Antigüedad')
-    estado = fields.Selection(STATE,'Estado de afiliación')
+    estado = fields.Selection(STATE,
+      string='Estado de afiliación',
+      readonly=True,
+      default=NONE)
     observado = fields.Boolean('Observado?')
     observacion = fields.Char('Observación', size=240)
+    aportes = fields.One2many('docentes.aportes', 'docente',
+        string='Aportes docente')
 
     @api.multi
     def funcionSolicitarAfiliacion(self):
       today = time.strftime('%Y-%m-%d')
       # El método self.write actualiza el campo en la interfaz
-      self.write({'estado':'pend_a','fecha_alta': today})
+      self.write({'estado': PEND_A,'fecha_alta': today})
       return True # Siempre tenemos que retornar True al final de la declaración
 
     @api.multi
     def funcionSolicitarDesafiliacion(self):
       today = time.strftime('%Y-%m-%d')
       # El método self.write actualiza el campo en la interfaz
-      self.write({'estado':'pend_b','fecha_baja': today})
+      self.write({'estado': PEND_B,'fecha_baja': today})
       return True # Siempre tenemos que retornar True al final de la declaración
 
     @api.multi
@@ -101,68 +87,68 @@ class Partner(models.Model):
             if record['afiliados_ant']:
                 afil = record['afiliados_ant'] + ', ' + afil
            
-      self.write({'estado': 'activo','afiliados_ant': afil})
+      self.write({'estado': ACTIVO,'afiliados_ant': afil})
       return True # Siempre tenemos que retornar True al final de la declaración
     
     @api.multi
     def funcionConfirmarDesafiliacion(self):
       # El método self.write actualiza el campo en la interfaz
-      self.write({'estado': 'baja'})
+      self.write({'estado': BAJA})
       return True # Siempre tenemos que retornar True al final de la declaración
 
     @api.multi 
     def funcionActivoaPasivo(self):
       # El método self.write actualiza el campo en la interfaz
-      self.write({'estado': 'pasivo'})
+      self.write({'estado': PASIVO})
       return True # Siempre tenemos que retornar True al final de la declaración
 
     @api.multi
     def funcionActivoaJubilado(self):
       # El método self.write actualiza el campo en la interfaz
-      self.write({'estado': 'jub'})
+      self.write({'estado': JUB})
       return True # Siempre tenemos que retornar True al final de la declaración
 
     @api.multi
     def funcionPasivoaActivo(self):
       # El método self.write actualiza el campo en la interfaz
-      self.write({'estado': 'activo'})
+      self.write({'estado': ACTIVO})
       return True # Siempre tenemos que retornar True al final de la declaración
 
     @api.multi 
     def funcionPasivoaHistorico(self):
       # El método self.write actualiza el campo en la interfaz
-      self.write({'estado': 'hist'})
+      self.write({'estado': HIST})
       return True # Siempre tenemos que retornar True al final de la declaración
     
     @api.multi 
     def funcionJubiladoaHistorico(self):
       # El método self.write actualiza el campo en la interfaz
-      self.write({'estado': 'hist'})
+      self.write({'estado': HIST})
       return True # Siempre tenemos que retornar True al final de la declaración
 
     @api.multi
     def funcionJubiladoaCotizante(self):
-      self.write({'estado': 'juba'})
+      self.write({'estado': JUBA})
       return True
 
     @api.multi
     def funcionJubiladoaNoCotizante(self):
-      self.write({'estado': 'jub'})
+      self.write({'estado': JUB})
       return True
 
     @api.multi
     def funcionPasivoaCotizante(self):
-      self.write({'estado': 'activo'})
+      self.write({'estado': ACTIVO})
       return True
 
     @api.multi
     def funcionJubilar(self):
-      self.write({'estado':'jub'})
+      self.write({'estado': JUB})
       return True
 
     @api.multi
     def funcionAfiladoaNoCotizante(self):
-      self.write({'estado':'pasivo'})
+      self.write({'estado': PASIVO})
       return True
 
 #Partner()
