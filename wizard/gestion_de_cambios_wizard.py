@@ -1,14 +1,11 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
-
+from odoo.addons.docentes.config.config import *
 
 
 class DocentesGestionDeCambioWiz(models.TransientModel):
     _name ='docentes.gestion.wizard'
 
-    titulo = fields.Char(string='Titulo de gestión de cambio',
-                         required=True,
-                         default='Gestión de cambios ' + fields.Datetime.now())
     fecha_desde = fields.Datetime('Fecha desde',
                            help="Elegir desde la fecha",
                            default=fields.Datetime.now(),
@@ -20,9 +17,8 @@ class DocentesGestionDeCambioWiz(models.TransientModel):
 
 
     @api.multi
-    @api.depends('fecha_desde', 'fecha_hasta', 'titulo')
+    @api.depends('fecha_desde', 'fecha_hasta')
     def set_situacion(self):
-        # self.ensure_one()
         aportes = self.env['docentes.aportes'].search([('fecha', '>=', self.fecha_desde), ('fecha', '<=', self.fecha_hasta)])
         if not aportes:
             raise UserError("No hay aportes entre esas fechas")
@@ -32,24 +28,36 @@ class DocentesGestionDeCambioWiz(models.TransientModel):
         for docente in docentes:
             aporte_docente = aportes.search([('docente.id', '=', docente.id)])
             if not aporte_docente:
-                situacion = 'OT'
-                if docente.estado == 'activo':
-                    situacion = 'ASD'
-                if docente.estado == 'pend_a':
-                    situacion = 'PSD'
-                docentes_situacion.append((docente.id, situacion))
+                situacion = DOCENTE_NO_APORTO.get(docente.estado, OT)
+                docente_aporte = {
+                    'docente': docente.id,
+                    'situacion': situacion,
+                    'fecha': None
+                }
+                docentes_situacion.append(docente_aporte)
+            else:
+                for aporte in aporte_docente:
+                    situacion = DOCENTE_APORTO.get(docente.estado, ACTIVO)
+                    if situacion == ACTIVO:
+                        continue
+                    docente_aporte = {
+                        'docente': docente.id,
+                        'situacion': situacion,
+                        'fecha_de_aporte': aporte.fecha
+                    }
+                    docentes_situacion.append(docente_aporte)
 
         if not docentes_situacion:
             raise UserError("No hay docentes con posibles cambios entre esas fechas")
 
         docentes_cambio = []
-        for docente, situacion in docentes_situacion:
-            d_cambio = (0, 0, {'docente': docente, 'situacion': situacion})
+        for docente in docentes_situacion:
+            ## Agregamos los dos ceros primeros para que se cree el docenteGestionCambios
+            d_cambio = (0, 0, docente)
             docentes_cambio.append(d_cambio)
 
         nueva_gestion = {
             'docentes_cambio': docentes_cambio,
-            'titulo': self.titulo,
             'fecha_desde': self.fecha_desde,
             'fecha_hasta': self.fecha_hasta
         }
@@ -60,7 +68,7 @@ class DocentesGestionDeCambioWiz(models.TransientModel):
             'name': 'Gestión de cambios',
             'res_model': 'docentes.gestion_de_cambios.modelo',
             'res_id': id_ge.id,
-            'taget': 'new',
+            # 'taget': 'new',
             'view_mode': 'form',
             'view_type': 'form'
         }

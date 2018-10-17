@@ -6,11 +6,8 @@
         <field name="arch" type="xml">
             <form string="Elige una fecha">
                 <group>
-                    <group>
-                        <field name="titulo"/>
-                        <field name="fecha_desde"/>
-                        <field name="fecha_hasta"/>
-                    </group>
+                    <field name="fecha_desde"/>
+                    <field name="fecha_hasta"/>
                 </group>
                 <footer>
                     <button name="set_situacion" string="Obtener socios" type="object" class="btn-primary"/>
