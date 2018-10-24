@@ -1,16 +1,17 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.addons.docentes.config.config import *
+from odoo.addons.docentes.models.base import Base
 
 
 class DocentesGestionDeCambioWiz(models.TransientModel):
     _name ='docentes.gestion.wizard'
 
-    fecha_desde = fields.Datetime('Fecha desde',
+    fecha_desde = fields.Date('Fecha desde',
                            help="Elegir desde la fecha",
                            default=fields.Datetime.now(),
                            required=True)
-    fecha_hasta = fields.Datetime('Fecha hasta',
+    fecha_hasta = fields.Date('Fecha hasta',
                            help="Elegir hasta fecha para mostrar los socios",
                            default=fields.Datetime.now(),
                            required=True)
@@ -32,7 +33,7 @@ class DocentesGestionDeCambioWiz(models.TransientModel):
                 docente_aporte = {
                     'docente': docente.id,
                     'situacion': situacion,
-                    'fecha': None
+                    'fecha_de_aporte': None
                 }
                 docentes_situacion.append(docente_aporte)
             else:
@@ -50,11 +51,11 @@ class DocentesGestionDeCambioWiz(models.TransientModel):
         if not docentes_situacion:
             raise UserError("No hay docentes con posibles cambios entre esas fechas")
 
+        gc = Base(self.env['docentes.gestion_de_cambios'])
         docentes_cambio = []
         for docente in docentes_situacion:
-            ## Agregamos los dos ceros primeros para que se cree el docenteGestionCambios
-            d_cambio = (0, 0, docente)
-            docentes_cambio.append(d_cambio)
+            print(docente)
+            docentes_cambio.append((4, gc.get_create(docente).id))
 
         nueva_gestion = {
             'docentes_cambio': docentes_cambio,

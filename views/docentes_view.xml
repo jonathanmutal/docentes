@@ -63,7 +63,7 @@
         <field name="act_window_id" ref="action_docentes"/>
     </record>
     <menuitem name="Main" id="base.menu_docentes_main" sequence="1" parent="base.menu_docentes"/>
-    <menuitem name="Listados" parent="base.menu_docentes_main" id="menu_docentes" sequence="1" action="action_docentes"/>
+    <menuitem name="Docentes" parent="base.menu_docentes_main" id="menu_docentes" sequence="1" action="action_docentes"/>
 
     <record model="ir.ui.view" id="view_partner_form">
         <field name="name">res.partner.form.inherit</field>
@@ -82,7 +82,7 @@
                     <group>
                         <p>
                             <button name="funcionSolicitarAfiliacion" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado','!=', 'none'),('estado','!=', 'baja'),('estado','!=', 'hist')]}" string="Afiliar"/>
-                            <button name="funcionSolicitarDesafiliacion" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado','!=', 'activo'),('estado','!=', 'jub'),('estado','!=', 'juba'),('estado','!=', 'pasivo')]}" string="Desafiliar"/>
+                            <button name="funcionSolicitarDesafiliacion" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado','!=', 'activo'),('estado','!=', 'jub'),('estado','!=', 'juba'),('estado','!=', 'pasivo'), ('estado', '!=', 'becariea')]}" string="Desafiliar"/>
                             <button name="funcionConfirmarAfiliacion" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado','!=', 'pend_a')]}" string="Confirmar afiliación"/>
                             <button name="funcionConfirmarDesafiliacion" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado','!=', 'pend_b')]}" string="Confirmar desafiliación"/>
                             <button name="funcionActivoaJubilado" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado','!=', 'activo'), ('estado','!=', 'pasivo')]}" string="Afiliado que obtuvo su jubilación"/>
@@ -91,6 +91,8 @@
                             <button name="funcionJubiladoaHistorico" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado','!=', 'jub'), ('estado','!=', 'juba'), ('estado','!=', 'activo'), ('estado','!=', 'pasivo')]}" string="Afiliado Histórico"/>
                             <button name="funcionPasivoaCotizante" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado', '!=', 'pasivo')]}" string="Afiliado Cotizante"/>
                             <button name="funcionAfiladoaNoCotizante" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado', '!=', 'activo')]}" string="Afiliado No Cotizante"/>
+                            <button name="funcionBecario" groups="base.group_docentes_administracion" type="object" string="Becarie" attrs="{'invisible': [('estado', '!=', 'none'),('estado','!=', 'baja'),('estado','!=', 'hist')]}"/>
+                            <button name="funcionBecarioaActivo" groups="base.group_docentes_administracion" type="object" string="Afiliar" attrs="{'invisible': [('estado', '!=', 'becarie')]}"/>
                         </p>
                     </group>
                     <group>

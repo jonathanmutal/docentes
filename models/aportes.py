@@ -19,15 +19,15 @@
 #
 ##############################################################################
 
-
 from odoo import api, fields, models, _
 from odoo.addons.docentes.config.config import *
-
-import time
+from odoo.addons.docentes.models.base import Base
 
 
 class DocentesAportes(models.Model):
-    '''Aportes de docentes afiliados'''
+    """
+    Aportes de docentes afiliados
+    """
     _name = 'docentes.aportes'
     _order = 'fecha desc, nombre'
     _description = 'Modelo para los aportes'
@@ -37,40 +37,48 @@ class DocentesAportes(models.Model):
         required=True,
         ondelete='cascade')
     legajo = fields.Integer('Legajo', required=True)
-    nombre = fields.Char('Nombre', size=30)
-    fecha = fields.Date('Fecha', default=fields.Datetime.now(), required=True)
+    nombre = fields.Char('Nombre', size=30, required=True)
+    fecha = fields.Date('Fecha', required=True)
     codigo = fields.Integer('Codigo')
     aporte = fields.Float('Aporte',
         digits=(16,2),
         required=True,
         store=True)
 
+
     @api.multi
-    @api.depends('legajo', 'nombre')
+    @api.depends('legajo', 'nombre', 'fecha')
     def create(self, vals):
         """
         Override the create's method
         """
-        legajo = vals['legajo']
-        nombre = vals['nombre']
-        docente = self.env['res.partner'].search([('legajo', '=', legajo)])
-        if not docente:
-            nuevo_docente = {
-                'legajo': legajo,
-                'name': nombre,
-                'esdocente': True,
-                'estado': NONE
-            }
-            docente = self.env['res.partner'].create(nuevo_docente)
-            self.env['docentes.gestion_de_cambios'].create({
-                'fecha_de_aporte': vals['fecha'] if 'fecha' in vals else fields.Datetime.now(),
+        docente = {
+            'legajo': vals['legajo'],
+            'esdocente': True,
+        }
+        docente = Base(self.env['res.partner']).get_create(
+            objeto_dic=docente,
+            estado=NONE,
+            name=vals['nombre']
+        )
+
+        if docente.estado == NONE:
+            nueva_gestion = {
+                'fecha_de_aporte': vals['fecha'],
                 'docente': docente.id,
-                'situacion': NOA
-                })
+            }
+            gc = Base(self.env['docentes.gestion_de_cambios']).get_create(
+                objeto_dic=nueva_gestion,
+                situacion=NOA
+            )
 
         vals.update({
             'docente': docente.id,
             'aporte': vals['aporte'] / 100
             })
+
+        aporte = Base(self.env['docentes.aportes']).get(vals)
+        if aporte:
+            return super(DocentesAportes, self)
 
         return super(DocentesAportes, self).create(vals)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record model="ir.ui.view" id="gestion_de_cambios_no_aportaron_tree_view">
-        <field name="name">gestion_de_cambios_docentes_aportes.tree</field>
+        <field name="name">gestion_de_cambios_docentes_no_aportes.tree</field>
         <field name="model">docentes.gestion_de_cambios</field>
         <field name="arch" type="xml">
             <tree string="Gestión de cambios aportes">
@@ -11,7 +11,7 @@
         </field>
     </record>
     <record model="ir.ui.view" id="gestion_de_cambios_no_aportaron_form_view">
-        <field name="name">gestion_de_cambios_aportes.form</field>
+        <field name="name">gestion_de_cambios_docentes_no_aportes.form</field>
         <field name="model">docentes.gestion_de_cambios</field>
         <field name="arch" type="xml">
             <form string="Gestión de cambios aportes">

@@ -4,7 +4,7 @@
         <field name="name">gestion_de_cambios_docentes_aportes.tree</field>
         <field name="model">docentes.gestion_de_cambios</field>
         <field name="arch" type="xml">
-            <tree string="Gestión de cambios aportes">
+            <tree string="Gestión de cambios aportaron">
                 <field name="docente"/>
                 <field name="fecha_de_aporte"/>
                 <field name="situacion"/>
@@ -12,10 +12,10 @@
         </field>
     </record>
     <record model="ir.ui.view" id="gestion_de_cambios_aportaron_form_view">
-        <field name="name">gestion_de_cambios_aportes.form</field>
+        <field name="name">gestion_de_cambios_docentes_aportes.form</field>
         <field name="model">docentes.gestion_de_cambios</field>
         <field name="arch" type="xml">
-            <form string="Gestión de cambios aportes">
+            <form string="Gestión de cambios aportaron">
                 <field name="docente"/>
                 <field name="fecha_de_aporte"/>
                 <field name="situacion"/>

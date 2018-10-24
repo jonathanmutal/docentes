@@ -12,8 +12,8 @@ class DocentesGestionDeCambio(models.Model):
     gestion = fields.Many2one('docentes.gestion_de_cambios.modelo',
                                  string='Lista de cambios',
                                  readonly=True,
-                                 ondelete='cascade')
-    fecha_de_aporte = fields.Datetime('Fecha de aporte')
+                                 ondelete='set null')
+    fecha_de_aporte = fields.Date('Fecha de aporte')
     situacion = fields.Selection(SITUACION, 'Situación actual', readonly=True)
 
 
@@ -34,7 +34,7 @@ class GestionDeCambio(models.Model):
                              'gestion',
                              string='Lista de cambios',
                              readonly=True)
-    fecha_desde = fields.Datetime('Fecha desde',
+    fecha_desde = fields.Date('Fecha desde',
                                   readonly=True)
-    fecha_hasta = fields.Datetime('Fecha hasta',
+    fecha_hasta = fields.Date('Fecha hasta',
                                   readonly=True)

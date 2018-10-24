@@ -24,6 +24,8 @@ import time
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.docentes.config.config import *
+from odoo.addons.docentes.models.base import Base
+
 
 TIPODOC = [('dni','DNI'),('lc','LC'),('le','LE'),('pas','PAS'),('ci','CI')]
 ESTCIV = [('c', 'Casada/o'),('s','Soltera/o'), ('u', 'Unida/o'),('v', 'Viuda/o'),('d', 'Divorciada/o'),('p','Separada/o'),('n','Prefiere no decirlo')]
@@ -63,92 +65,95 @@ class Partner(models.Model):
     aportes = fields.One2many('docentes.aportes', 'docente',
         string='Aportes docente')
 
+    def _solicitarCambio(self, **args):
+      # El método self.write actualiza el campo en la interfaz
+      self.write(args)
+      return True
+
     @api.multi
     def funcionSolicitarAfiliacion(self):
-      today = time.strftime('%Y-%m-%d')
-      # El método self.write actualiza el campo en la interfaz
-      self.write({'estado': PEND_A,'fecha_alta': today})
-      return True # Siempre tenemos que retornar True al final de la declaración
+      return self._solicitarCambio(
+              estado=PEND_A,
+              fecha_alta=time.strftime('%Y-%m-%d')
+            )
 
     @api.multi
     def funcionSolicitarDesafiliacion(self):
       today = time.strftime('%Y-%m-%d')
-      # El método self.write actualiza el campo en la interfaz
-      self.write({'estado': PEND_B,'fecha_baja': today})
-      return True # Siempre tenemos que retornar True al final de la declaración
+      return self._solicitarCambio(estado=PEND_B, fecha_baja=today)
 
     @api.multi
     def funcionConfirmarAfiliacion(self):
       # El método self.write actualiza el campo en la interfaz
-
       reads = self.read(['afiliados_ant', 'afiliado'])
       for record in reads:
             afil = str(record['afiliado'])
             if record['afiliados_ant']:
                 afil = record['afiliados_ant'] + ', ' + afil
-           
       self.write({'estado': ACTIVO,'afiliados_ant': afil})
       return True # Siempre tenemos que retornar True al final de la declaración
     
     @api.multi
     def funcionConfirmarDesafiliacion(self):
-      # El método self.write actualiza el campo en la interfaz
-      self.write({'estado': BAJA})
-      return True # Siempre tenemos que retornar True al final de la declaración
+      return self._solicitarCambio(estado=BAJA)
 
     @api.multi 
     def funcionActivoaPasivo(self):
-      # El método self.write actualiza el campo en la interfaz
-      self.write({'estado': PASIVO})
-      return True # Siempre tenemos que retornar True al final de la declaración
+      return self._solicitarCambio(estado=PASIVO)
 
     @api.multi
     def funcionActivoaJubilado(self):
-      # El método self.write actualiza el campo en la interfaz
-      self.write({'estado': JUB})
-      return True # Siempre tenemos que retornar True al final de la declaración
+      return self._solicitarCambio(estado=JUB)
 
     @api.multi
     def funcionPasivoaActivo(self):
-      # El método self.write actualiza el campo en la interfaz
-      self.write({'estado': ACTIVO})
-      return True # Siempre tenemos que retornar True al final de la declaración
+      return self._solicitarCambio(estado=ACTIVO)
 
     @api.multi 
     def funcionPasivoaHistorico(self):
-      # El método self.write actualiza el campo en la interfaz
-      self.write({'estado': HIST})
-      return True # Siempre tenemos que retornar True al final de la declaración
+      return self._solicitarCambio(estado=HIST)
     
     @api.multi 
     def funcionJubiladoaHistorico(self):
-      # El método self.write actualiza el campo en la interfaz
-      self.write({'estado': HIST})
-      return True # Siempre tenemos que retornar True al final de la declaración
+      return self._solicitarCambio(estado=HIST) # Siempre tenemos que retornar True al final de la declaración
 
     @api.multi
     def funcionJubiladoaCotizante(self):
-      self.write({'estado': JUBA})
-      return True
+      return self._solicitarCambio(estado=JUBA)
 
     @api.multi
     def funcionJubiladoaNoCotizante(self):
-      self.write({'estado': JUB})
-      return True
+      return self._solicitarCambio(estado=JUB)
 
     @api.multi
     def funcionPasivoaCotizante(self):
-      self.write({'estado': ACTIVO})
-      return True
+      return self._solicitarCambio(estado=ACTIVO)
 
     @api.multi
     def funcionJubilar(self):
-      self.write({'estado': JUB})
-      return True
+      return self._solicitarCambio(estado=JUB)
 
     @api.multi
     def funcionAfiladoaNoCotizante(self):
-      self.write({'estado': PASIVO})
-      return True
+      return self._solicitarCambio(estado=PASIVO)
+
+    @api.multi
+    def funcionBecario(self):
+      return self._solicitarCambio(estado=BECARIE)
+
+    @api.multi
+    def funcionBecarioaActivo(self):
+      return self._solicitarCambio(estado=BECARIEA)
+
+    @api.multi
+    def write(self, vals):
+      docente_gestion = Base(self.env['docentes.gestion_de_cambios']).get(
+        {'docente': self.id}
+      )
+      if docente_gestion:
+        ## borramos de la gestion de cambio
+        docente_gestion.unlink()
+      return super(Partner, self).write(vals)
+
 
 #Partner()
