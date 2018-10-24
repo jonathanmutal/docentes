@@ -29,6 +29,10 @@ PASIVO = 'pasivo'
 JUB = 'jub'
 JUBA = 'juba'
 ACTIVO = 'activo'
+BECARIEA = 'becariea'
+BECARIE = 'becarie'
+CONTRATADEA = 'contratadea'
+CONTRATADE = 'contratade'
 
 STATE = [
     (NONE, 'No afiliado'),
@@ -39,7 +43,11 @@ STATE = [
     (PASIVO, 'No cotizante'),
     (JUB, 'Jubilado'),
     (JUBA, 'Jubilado Activo'),
-    (ACTIVO, 'Activo')
+    (ACTIVO, 'Activo'),
+    (BECARIEA, 'Becarie cotizante'),
+    (BECARIE, 'Becarie no cotizante'),
+    (CONTRATADEA, 'Contratade activo'),
+    (CONTRATADE, 'Contratade no cotizante')
 ]
 
 ## Sera usado para gestion_de_cambios_wizard, en vez de tener muchos ifs.
