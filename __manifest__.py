@@ -42,6 +42,7 @@ Incorpora nueva información a la categoría Partner y menúes específicos para
         'views/gestion_de_cambios_view.xml',
         'views/gestion_de_cambios_aportaron_view.xml',
         'views/gestion_de_cambios_no_aportaron_view.xml',
+        'views/gestion_de_cambios_docente.xml',
 
         'wizard/gestion_de_cambios_wizard_view.xml'
     ],

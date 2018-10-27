@@ -13,7 +13,7 @@ SITUACION = [
     (PASD, 'Pendiente de alta sin descuentos'),
     (HA, 'Historico que aporto'),
     (PAA, 'Pendiente de alta que aporto'),
-    (NOA, 'No afiliado que aporto'),
+    (NOA, 'No afiliade que aporto'),
     (JQA, 'Jubilado que aporto'),
     (PBA, 'Pendiente de baja que aporto'),
     (BA, 'Baja que aporto'),
@@ -35,14 +35,14 @@ CONTRATADEA = 'contratadea'
 CONTRATADE = 'contratade'
 
 STATE = [
-    (NONE, 'No afiliado'),
+    (NONE, 'No afiliade'),
     (HIST, 'Histórico'),
-    (BAJA, 'Desafiliado'),
+    (BAJA, 'Desafiliade'),
     (PEND_B, 'Pendiente de baja'),
     (PEND_A, 'Pendiente de alta'),
     (PASIVO, 'No cotizante'),
-    (JUB, 'Jubilado'),
-    (JUBA, 'Jubilado Activo'),
+    (JUB, 'Jubilade no cotizante'),
+    (JUBA, 'Jubilade cotizante'),
     (ACTIVO, 'Activo'),
     (BECARIEA, 'Becarie cotizante'),
     (BECARIE, 'Becarie no cotizante'),
