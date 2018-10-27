@@ -8,13 +8,29 @@ class DocentesGestionDeCambio(models.Model):
     docente = fields.Many2one('res.partner', 'Docente',
                                  required=True,
                                  ondelete='cascade',
-                                 readonly=True)
+                                 readonly=True
+                                 )
     gestion = fields.Many2one('docentes.gestion_de_cambios.modelo',
                                  string='Lista de cambios',
                                  readonly=True,
                                  ondelete='set null')
     fecha_de_aporte = fields.Date('Fecha de aporte')
     situacion = fields.Selection(SITUACION, 'Situación actual', readonly=True)
+
+    @api.multi
+    def crearDocente(self):
+        id_docente = self.docente.id
+        self.docente.update({'esdocente': True})
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Gestión de cambios',
+            'res_model': 'res.partner',
+            'res_id': id_docente,
+            # 'taget': 'new',
+            'view_mode': 'form',
+            'view_type': 'form'
+        }
+
 
 
 class GestionDeCambio(models.Model):
