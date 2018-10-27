@@ -12,11 +12,11 @@
                 <field name="afiliados_ant" filter_domain="[('afiliados_ant','ilike',self)]" string="Afiliado"/>
                 <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/> 
                 <filter icon="terp-personal" name="todos_no_afiliados" domain="[('estado', 'in', ['none','baja','pend_b','hist'])]" string="No afiliados" help="No afiliados"/>
-                <filter icon="terp-personal" name="todos_afiliados" domain="[('estado', 'in', ['activo','pend_a','juba'])]" string="Afiliados" help="Afiliados"/>
+                <filter icon="terp-personal" name="todos_afiliados" domain="[('estado', 'in', ['activo','pend_a','juba', 'becariea', 'contratadea'])]" string="Afiliados" help="Afiliados"/>
                 <filter string="Pendientes" name="pendientes" icon="terp-personal" domain="[('estado', 'in', ['pend_a','pend_b'])]" help="Pendientes"/>
                 <separator/>
-                <filter icon="terp-personal" name="activos" domain="[('estado', '=', 'activo')]" string="Activo" />
-                <filter icon="terp-personal" name="pasivos" domain="[('estado', '=', 'pasivo')]" string="No cotizante" />
+                <filter icon="terp-personal" name="activos" domain="[('estado', 'in', ['activo', 'juba', 'becariea', 'contratadea'])]" string="Activo" />
+                <filter icon="terp-personal" name="pasivos" domain="[('estado', 'in', ['pasivo', 'becarie', 'jub'])]" string="No cotizante" />
                 <filter icon="terp-personal" name="bajas" domain="[('estado', '=', 'baja')]" string="Baja" />
                 <filter icon="terp-personal" name="jubiladosactivos" domain="[('estado', '=', 'juba')]" string="Jubilado Activo" />
                 <filter icon="terp-personal" name="jubilados" domain="[('estado', '=', 'jub')]" string="Jubilado No Cotizante" />
@@ -71,33 +71,37 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <field name="is_company" position="after">
-                <field name="esdocente" on_change="onchange_type(esdocente)" class="oe_inline"/>
-                <label for="esdocente" string="Es docente?"/>
+                <field name="esdocente" groups="base.grupo_avanzado_docentes" on_change="onchange_type(esdocente)" class="oe_inline"/>
+                <label for="esdocente" groups="base.grupo_avanzado_docentes" string="Es docente, becarie o contratade?"/>
             </field>
             <field name="email" position="after">
                 <field name="email2" widget="email"/>
             </field>
             <notebook position="inside">
-                <page string="Docente" attrs="{'invisible': [('esdocente','=',False)]}">
+                <page string="Afiliade" attrs="{'invisible': [('esdocente','=',False)]}">
                     <group>
                         <p>
                             <button name="funcionSolicitarAfiliacion" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado','!=', 'none'),('estado','!=', 'baja'),('estado','!=', 'hist')]}" string="Afiliar"/>
-                            <button name="funcionSolicitarDesafiliacion" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado','!=', 'activo'),('estado','!=', 'jub'),('estado','!=', 'juba'),('estado','!=', 'pasivo'), ('estado', '!=', 'becariea')]}" string="Desafiliar"/>
+                            <button name="funcionSolicitarDesafiliacion" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado','!=', 'activo'),('estado','!=', 'jub'),('estado','!=', 'juba'),('estado','!=', 'pasivo'), ('estado', '!=', 'becariea'), ('estado', '!=', 'becarie'), ('estado', '!=', 'contratadea'), ('estado', '!=', 'contratade')]}" string="Desafiliar"/>
                             <button name="funcionConfirmarAfiliacion" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado','!=', 'pend_a')]}" string="Confirmar afiliación"/>
                             <button name="funcionConfirmarDesafiliacion" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado','!=', 'pend_b')]}" string="Confirmar desafiliación"/>
                             <button name="funcionActivoaJubilado" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado','!=', 'activo'), ('estado','!=', 'pasivo')]}" string="Afiliado que obtuvo su jubilación"/>
                             <button name="funcionJubiladoaCotizante" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado', '!=', 'jub')]}" string="Jubilado Cotizante"/>
                             <button name="funcionJubiladoaNoCotizante" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado', '!=', 'juba')]}" string="Jubilado No Cotizante"/>
-                            <button name="funcionJubiladoaHistorico" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado','!=', 'jub'), ('estado','!=', 'juba'), ('estado','!=', 'activo'), ('estado','!=', 'pasivo')]}" string="Afiliado Histórico"/>
+                            <button name="funcionJubiladoaHistorico" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado', 'not in', ['jub', 'juba', 'activo', 'pasivo', 'becarie', 'becariea', 'contratade', 'contratadea'])]}" string="Afiliado Histórico"/>
                             <button name="funcionPasivoaCotizante" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado', '!=', 'pasivo')]}" string="Afiliado Cotizante"/>
                             <button name="funcionAfiladoaNoCotizante" groups="base.group_docentes_administracion" type="object" attrs="{'invisible': [('estado', '!=', 'activo')]}" string="Afiliado No Cotizante"/>
-                            <button name="funcionBecario" groups="base.group_docentes_administracion" type="object" string="Becarie" attrs="{'invisible': [('estado', '!=', 'none'),('estado','!=', 'baja'),('estado','!=', 'hist')]}"/>
-                            <button name="funcionBecarioaActivo" groups="base.group_docentes_administracion" type="object" string="Afiliar" attrs="{'invisible': [('estado', '!=', 'becarie')]}"/>
+                            <button name="funcionBecario" groups="base.group_docentes_administracion" type="object" string="Afiliar Becarie" attrs="{'invisible': [('estado', '!=', 'none'),('estado','!=', 'baja'),('estado','!=', 'hist')]}"/>
+                            <button name="funcionBecarioaActivo" groups="base.group_docentes_administracion" type="object" string="Becarie cotizante" attrs="{'invisible': [('estado','!=', 'becarie')]}"/>
+                            <button name="funcionBecario" groups="base.group_docentes_administracion" type="object" string="Becarie no cotizante" attrs="{'invisible': [ ('estado', '!=', 'becariea')]}"/>
+                            <button name="funcionContratado" groups="base.group_docentes_administracion" type="object" string="Afiliar Contratade" attrs="{'invisible': [('estado', '!=', 'none'),('estado','!=', 'baja'),('estado','!=', 'hist')]}"/>
+                            <button name="funcionContratadoaActivo" groups="base.group_docentes_administracion" type="object" string="Contratade cotizante" attrs="{'invisible': [('estado', '!=', 'contratade')]}"/>
+                            <button name="funcionContratado" groups="base.group_docentes_administracion" type="object" string="Contatade no cotizante" attrs="{'invisible': [('estado', '!=', 'contratadea')]}"/>
                         </p>
                     </group>
                     <group>
                         <group>
-                            <field name="legajo"/>
+                            <field name="legajo" readonly="1"/>
                             <field name="tipodni"/>
                             <field name="dni"/>
                             <field name="estadocivil"/>
@@ -117,10 +121,11 @@
                         </group>
                     </group>
                 </page>
-                <page string="Aportes">
+                <page string="Aportes" attrs="{'invisible': [('esdocente','=',False)]}">
                     <field name="aportes">
                         <tree string="aportes">
                             <field name="fecha"/>
+                            <field name="codigo"/>
                             <field name="aporte"/>
                         </tree>
                     </field>

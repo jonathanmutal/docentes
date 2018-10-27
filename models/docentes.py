@@ -43,8 +43,9 @@ class Partner(models.Model):
     ]
 
     email2 = fields.Char('Otro Correo electrónico', size=240)
-    esdocente = fields.Boolean('Es docente?', default=False)
-    legajo = fields.Integer('Legajo')
+    esdocente = fields.Boolean('Es docente, becarie o contratade?',
+      default=False)
+    legajo = fields.Integer('Legajo', readonly=True)
     tipodni = fields.Selection(TIPODOC,'Tipo doc')
     dni = fields.Integer('N documento')
     estadocivil = fields.Selection(ESTCIV,'Estado civil')
@@ -144,6 +145,14 @@ class Partner(models.Model):
     @api.multi
     def funcionBecarioaActivo(self):
       return self._solicitarCambio(estado=BECARIEA)
+
+    @api.multi
+    def funcionContratado(self):
+      return self._solicitarCambio(estado=CONTRATADE)
+
+    @api.multi
+    def funcionContratadoaActivo(self):
+      return self._solicitarCambio(estado=CONTRATADEA)
 
     @api.multi
     def write(self, vals):
