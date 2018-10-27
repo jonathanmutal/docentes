@@ -25,5 +25,5 @@
         <field name="view_id" ref="view_gestion_de_cambios_wizard"/>
         <field name="target">new</field>
     </record>
-    <menuitem name="Gestión de cambios" id="gestion_de_cambios_wizard" sequence="130" parent="base.menu_docentes_configuracion" action="action_gestion_de_cambios_wizard"/>
+    <menuitem name="Gestión de cambios" id="gestion_de_cambios_wizard" sequence="4" parent="base.menu_docentes_configuracion" action="action_gestion_de_cambios_wizard"/>
 </odoo>

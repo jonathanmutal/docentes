@@ -53,6 +53,6 @@
         <field name="view_id" ref="view_docentes_mails_tree"/>
         <field name="act_window_id" ref="action_docentes_mails"/>
     </record>
-    <menuitem name="Mails" parent="base.menu_docentes_configuracion" id="menu_docentes_mails" sequence="5" action="action_docentes_mails"/>
+    <menuitem name="Mails" parent="base.menu_docentes_configuracion" id="menu_docentes_mails" sequence="2" action="action_docentes_mails"/>
 </odoo>
 

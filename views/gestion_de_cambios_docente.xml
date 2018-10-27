@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_gestion_de_cambios_docentes">
+        <field name="name">Gestion de cambio</field>
+        <field name="model">docentes.gestion_de_cambios</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Button record">
+                <group>
+                    <field name="docente"/>
+                    <field name="situacion"/>
+                </group>
+                <button string="Crear Docente" type="object" name="crearDocente" class="oe_highlight"/>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_gestion_de_cambios_docentes_tree">
+        <field name="name">gestion_de_cambios.tree</field>
+        <field name="model">docentes.gestion_de_cambios</field>
+        <field name="arch" type="xml">
+            <tree string="Gestión de cambios">
+                <field name="docente"/>
+                <field name="situacion"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_docentes_gestion_de_cambios">
+        <field name="name">Gestión de cambios</field>
+        <field name="res_model">docentes.gestion_de_cambios</field>
+        <field name="domain">[]</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_gestion_de_cambios_docentes_tree"/>
+    </record>
+    <menuitem name="Altas pendientes" id="gestion_de_cambios_docente" parent="base.menu_docentes_configuracion" sequence="1" 
+    action="action_docentes_gestion_de_cambios" groups="base.grupo_avanzado_docentes"/>
+</odoo>
